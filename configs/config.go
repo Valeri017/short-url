@@ -21,9 +21,10 @@ type AuthConfig struct {
 }
 
 func LoadConfig() *Config {
-	err := godotenv.Load("short-url/.env")
+	pathonenv := `D:\dev\go\short_url\.env`
+	err := godotenv.Load(pathonenv)
 	if err != nil {
-		log.Println(err)
+		log.Println("Не загрузилося")
 	}
 	return &Config{
 		Db: DbConfig{

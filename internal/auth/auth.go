@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"short-url/configs"
@@ -27,6 +28,7 @@ func (handler *AuthHandler) Register() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(handler.Config.Auth.Secret)
 		fmt.Println("Registred")
+
 	}
 }
 
@@ -34,5 +36,11 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(handler.Config.Auth.Secret)
 		fmt.Println("Login")
+		res := LoginResponse{
+			Token: "123",
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(201)
+		json.NewEncoder(w).Encode(res)
 	}
 }
