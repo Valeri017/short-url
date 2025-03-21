@@ -35,6 +35,8 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(handler.Config.Auth.Secret)
 		fmt.Println("Login")
+		//прочитать боди
+
 		data := LoginResponse{
 			Token: "123",
 		}
