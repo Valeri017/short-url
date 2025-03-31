@@ -1,10 +1,13 @@
 package auth
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"short-url/configs"
 	"short-url/pkg/res"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type AuthHandler struct {
@@ -36,7 +39,16 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 		fmt.Println(handler.Config.Auth.Secret)
 		fmt.Println("Login")
 		//прочитать боди
+		var payload LoginRequests
+		err := json.NewDecoder(r.Body).Decode(&payload)
+		if err != nil {
+			res.Json(w, err.Error(), 402)
+		}
+		//Валидация
+		validate := validator.New()
+		validate.Struct(payload)
 
+		fmt.Println(payload)
 		data := LoginResponse{
 			Token: "123",
 		}
