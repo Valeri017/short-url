@@ -1,13 +1,12 @@
 package auth
 
 import (
-	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"short-url/configs"
+	"short-url/pkg/req"
 	"short-url/pkg/res"
-
-	"github.com/go-playground/validator/v10"
 )
 
 type AuthHandler struct {
@@ -31,6 +30,13 @@ func (handler *AuthHandler) Register() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(handler.Config.Auth.Secret)
 		fmt.Println("Registred")
+
+		body, err := req.HundleBody[RegisterRequests](&w, r)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(body)
+
 	}
 }
 
@@ -39,16 +45,23 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 		fmt.Println(handler.Config.Auth.Secret)
 		fmt.Println("Login")
 		//прочитать боди
-		var payload LoginRequests
-		err := json.NewDecoder(r.Body).Decode(&payload)
-		if err != nil {
-			res.Json(w, err.Error(), 402)
-		}
-		//Валидация
-		validate := validator.New()
-		validate.Struct(payload)
+		//       var payload LoginRequests
 
-		fmt.Println(payload)
+		body, err := req.HundleBody[LoginRequests](&w, r)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(body)
+
+		// 	err := json.NewDecoder(r.Body).Decode(&payload)
+		// 	if err != nil {
+		// 		res.Json(w, err.Error(), 402)
+		// 	}
+		// 	//Валидация
+		// 	validate := validator.New()
+		// 	validate.Struct(payload)
+
+		// 	fmt.Println(payload)
 		data := LoginResponse{
 			Token: "123",
 		}
