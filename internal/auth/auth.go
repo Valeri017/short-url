@@ -28,12 +28,11 @@ func NewAuthHandler(router *http.ServeMux, deps AuthHandlerDeps) {
 
 func (handler *AuthHandler) Register() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println(handler.Config.Auth.Secret)
 		fmt.Println("Registred")
-
 		body, err := req.HundleBody[RegisterRequests](&w, r)
 		if err != nil {
-			log.Fatal(err)
+			w.Write([]byte("Введите\002 адрес\002 электронной\002 почты\002 или\002 пароль\002 не \002может\002 быть\002 пустым"))
+			log.Println(err)
 		}
 		fmt.Println(body)
 
@@ -45,23 +44,12 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 		fmt.Println(handler.Config.Auth.Secret)
 		fmt.Println("Login")
 		//прочитать боди
-		//       var payload LoginRequests
-
 		body, err := req.HundleBody[LoginRequests](&w, r)
 		if err != nil {
-			log.Fatal(err)
+			w.Write([]byte("Введите \002 адрес\002 электронной \002почты\002 или \002пароль\002 не\002 может\002 быть\002 пустым"))
+			log.Println(err)
 		}
 		fmt.Println(body)
-
-		// 	err := json.NewDecoder(r.Body).Decode(&payload)
-		// 	if err != nil {
-		// 		res.Json(w, err.Error(), 402)
-		// 	}
-		// 	//Валидация
-		// 	validate := validator.New()
-		// 	validate.Struct(payload)
-
-		// 	fmt.Println(payload)
 		data := LoginResponse{
 			Token: "123",
 		}
