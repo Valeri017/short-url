@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"short-url/configs"
 	"short-url/internal/auth"
+	"short-url/pkg/db"
 	"syscall"
 )
 
@@ -27,6 +28,7 @@ func main() {
 	}()
 
 	conf := configs.LoadConfig()
+	_ = db.NewDb(conf)
 	router := http.NewServeMux()
 	server := http.Server{
 		Addr:    "127.0.0.1:8081",
