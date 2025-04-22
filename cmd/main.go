@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"short-url/configs"
 	"short-url/internal/auth"
+	"short-url/internal/link"
 	"short-url/pkg/db"
 	"syscall"
 )
@@ -23,7 +24,6 @@ func main() {
 	go func() {
 		sig := <-sigChan
 		fmt.Printf("Пока пока %v\n", sig)
-		// Выполнение необходимых действий перед завершением
 		os.Exit(0)
 	}()
 
@@ -38,6 +38,7 @@ func main() {
 	auth.NewAuthHandler(router, auth.AuthHandlerDeps{
 		Config: conf,
 	})
+	link.NewLinkHandler(router, link.LinkHandlerDeps{})
 
 	fmt.Println("Сервер запущен на 8081")
 	server.ListenAndServe()
