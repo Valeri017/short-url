@@ -18,9 +18,9 @@ func NewLinkHandler(router *http.ServeMux, deps LinkHandlerDeps) {
 		// Config: deps.Config,
 	}
 	router.HandleFunc("POST /link/create", handler.Create())
-	router.HandleFunc("GET /{alias}", handler.GoTo())
-	router.HandleFunc("DELETE /link/delete", handler.Delete())
-	router.HandleFunc("PATH /", handler.Update())
+	router.HandleFunc("GET /{hash}", handler.GoTo())
+	router.HandleFunc("DELETE /link/{id}", handler.Delete())
+	router.HandleFunc("PATH /link/{id}", handler.Update())
 }
 
 func (handler *LinkHandler) Create() http.HandlerFunc {
@@ -37,7 +37,8 @@ func (handler *LinkHandler) GoTo() http.HandlerFunc {
 
 func (handler *LinkHandler) Delete() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Delete")
+		id := r.PathValue("id")
+		fmt.Println(id)
 	}
 }
 
