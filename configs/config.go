@@ -21,7 +21,7 @@ type AuthConfig struct {
 }
 
 func LoadConfig() *Config {
-	// pathonenv := `D:\dev\go\short_url\.env`
+
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Println("Не загрузился файл .env  попробуйте выпылнить команду go run cmd/main.go")

@@ -2,7 +2,10 @@ package link
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"short-url/pkg/req"
+	"short-url/pkg/res"
 )
 
 type LinkHandler struct {
@@ -21,7 +24,7 @@ func NewLinkHandler(router *http.ServeMux, deps LinkHandlerDeps) {
 		// Config: deps.Config,
 	}
 	router.HandleFunc("POST /link/create", handler.Create())
-	router.HandleFunc("PATH /link/{id}", handler.Update())
+	router.HandleFunc("PATCH /link/{id}", handler.Update())
 	router.HandleFunc("DELETE /link/{id}", handler.Delete())
 	router.HandleFunc("GET /link/{hash}", handler.GoTo())
 
@@ -29,7 +32,18 @@ func NewLinkHandler(router *http.ServeMux, deps LinkHandlerDeps) {
 
 func (handler *LinkHandler) Create() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Create")
+		body, err := req.HundleBody[LinkCreateRequest](&w, r)
+		if err != nil {
+			return
+		}
+		link := NewLink(body.Url)
+		createdLink, err := handler.LinkRepository.Create(link)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		res.Json(w, createdLink, 201)
+		log.Println("Ссылка создана")
 	}
 }
 
